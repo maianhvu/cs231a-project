@@ -62,4 +62,4 @@ class CalibrationRig:
         points = (points / points[:, 2:])[:, :2]
         for i in xrange(1, 4):
             cv2.line(image, tuple(np.int0(points[0])), tuple(np.int0(points[i])),
-                     AXIS_COLORS[i-1], 1, cv2.LINE_AA)
+                     AXIS_COLORS[i-1], 2, cv2.LINE_AA)

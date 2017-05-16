@@ -3,26 +3,26 @@ import numpy as np
 import imutils
 from calibration import Contour, ReferenceLine, SquaresIdentifier, PeaksIdentifier, CalibrationRig
 
-USE_VIDEO = True
+USE_VIDEO = False
 
 def process_image(image):
     triangles, squares = Contour.find_triangles_and_squares(image)
     ref_line = ReferenceLine(triangles)
-    # ref_line.draw(image)
+    ref_line.draw(image)
 
     peaks_identifier = PeaksIdentifier(triangles, ref_line)
     peaks = peaks_identifier.identify()
-    # for label, peak in peaks.iteritems():
-    #     peak = np.int0(peak)
-    #     cv2.circle(image, tuple(peak), 5, (0, 0, 255), 2, lineType=cv2.LINE_AA)
-    #     cv2.putText(image, str(label), (peak[0], peak[1] - 10), cv2.FONT_HERSHEY_SIMPLEX,
-    #                 0.4, (0, 0, 255), 2)
+    for label, peak in peaks.iteritems():
+        peak = np.int0(peak)
+        cv2.circle(image, tuple(peak), 5, (0, 0, 255), 2, lineType=cv2.LINE_AA)
+        cv2.putText(image, str(label), (peak[0], peak[1] - 10), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.4, (0, 0, 255), 2)
 
     sqr_identifier = SquaresIdentifier(squares, ref_line)
     identified_squares = sqr_identifier.identify(image, triangles)
-    # for label, s in identified_squares.iteritems():
-    #     cv2.putText(image, str(label), tuple(np.int0(s.centroid)), cv2.FONT_HERSHEY_SIMPLEX,
-    #                 0.5, (0, 255, 255), 2)
+    for label, s in identified_squares.iteritems():
+        cv2.putText(image, str(label), tuple(np.int0(s.centroid)), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5, (0, 255, 255), 2)
 
     calib = CalibrationRig(peaks, identified_squares)
     calib.draw_axes(image)
